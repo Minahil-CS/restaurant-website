@@ -1,0 +1,1864 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Saffron &amp; Ember — Wood-Fired Fine Dining &amp; Artisanal Kitchen</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Playfair Display (Editorial Serif) & Plus Jakarta Sans (Clean Modern Sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            obsidian: {
+              950: '#0b0908',
+              900: '#120f0d',
+              800: '#1c1714',
+              700: '#29221d',
+            },
+            ember: {
+              400: '#fbbf24',
+              500: '#d97706',
+              600: '#b45309',
+              700: '#92400e',
+            },
+            cream: {
+              50: '#fdfbf7',
+              100: '#f7f2e8',
+              200: '#ede3d1',
+            }
+          },
+          boxShadow: {
+            'luxury': '0 20px 50px -12px rgba(0, 0, 0, 0.45)',
+            'gold-glow': '0 8px 30px -4px rgba(217, 119, 6, 0.35)',
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Custom Editorial Styling & Scrollbars */
+    body {
+      background-color: #0b0908;
+      color: #f7f2e8;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #120f0d;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #3f352e;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #d97706;
+    }
+
+    /* Subtle Gold Shimmer Divider */
+    .gold-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(217, 119, 6, 0.55), transparent);
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-fade-up {
+      animation: fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Custom Date Input Icon Color Fix for Dark Theme */
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(0.85) sepia(0.4) saturate(3) hue-rotate(355deg);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body class="font-sans antialiased selection:bg-ember-500 selection:text-obsidian-950">
+
+  <!-- =====================================================================
+       1. GLASSMORPHIC STICKY NAVIGATION BAR
+  ====================================================================== -->
+  <header id="navbar" class="fixed top-0 inset-x-0 z-40 transition-all duration-300 bg-obsidian-950/80 backdrop-blur-md border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <!-- Brand Logo -->
+        <a href="#home" class="flex items-center gap-3 group">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 via-ember-500 to-ember-700 p-[1px] shadow-gold-glow">
+            <div class="w-full h-full rounded-full bg-obsidian-950 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform">
+              <i data-lucide="flame" class="w-5 h-5"></i>
+            </div>
+          </div>
+          <div>
+            <span class="font-serif text-xl sm:text-2xl font-bold tracking-tight text-cream-50 block leading-none">
+              Saffron <span class="text-amber-400 italic font-normal">&amp;</span> Ember
+            </span>
+            <span class="text-[10px] uppercase tracking-[0.25em] text-stone-400 block mt-1">Wood-Fired Kitchen</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden lg:flex items-center gap-8 text-sm font-medium text-stone-300">
+          <a href="#menu" class="hover:text-amber-400 transition-colors">Menu</a>
+          <a href="#services" class="hover:text-amber-400 transition-colors">Services</a>
+          <a href="#gallery" class="hover:text-amber-400 transition-colors">Gallery</a>
+          <a href="#reservations" class="hover:text-amber-400 transition-colors">Reservations</a>
+          <a href="#contact" class="hover:text-amber-400 transition-colors">Contact</a>
+        </nav>
+
+        <!-- Right Actions -->
+        <div class="flex items-center gap-2.5 sm:gap-3">
+          <!-- Tasting List / Pre-Order Drawer Trigger -->
+          <button
+            onclick="openTastingDrawer()"
+            class="relative inline-flex items-center gap-2 px-3.5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs sm:text-sm font-medium text-cream-100 transition-all"
+            title="View Tasting List"
+          >
+            <i data-lucide="utensils-crossed" class="w-4 h-4 text-amber-400"></i>
+            <span class="hidden sm:inline">Tasting List</span>
+            <span
+              id="tasting-count-badge"
+              class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold rounded-full bg-amber-500 text-obsidian-950"
+            >0</span>
+          </button>
+
+          <!-- My Bookings Trigger -->
+          <button
+            onclick="openMyBookingsModal()"
+            class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-stone-300 hover:text-white transition-all"
+            title="View Your Reservations"
+          >
+            <i data-lucide="calendar-check" class="w-4 h-4 text-amber-400"></i>
+            <span>My Bookings</span>
+          </button>
+
+          <!-- Primary CTA -->
+          <a
+            href="#reservations"
+            class="hidden md:inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-ember-600 hover:from-amber-400 hover:to-ember-500 text-obsidian-950 font-bold text-sm shadow-gold-glow transition-all"
+          >
+            <span>Reserve a Table</span>
+          </a>
+
+          <!-- Mobile Hamburger -->
+          <button
+            onclick="toggleMobileMenu()"
+            class="lg:hidden p-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-cream-100"
+            aria-label="Toggle Menu"
+          >
+            <i data-lucide="menu" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-menu" class="hidden lg:hidden bg-obsidian-900 border-b border-white/10 px-4 pt-3 pb-6 space-y-2 animate-fade-up">
+      <a href="#menu" onclick="toggleMobileMenu()" class="block px-4 py-2.5 rounded-xl text-sm font-medium text-cream-100 hover:bg-white/5">Menu</a>
+      <a href="#services" onclick="toggleMobileMenu()" class="block px-4 py-2.5 rounded-xl text-sm font-medium text-cream-100 hover:bg-white/5">Services</a>
+      <a href="#gallery" onclick="toggleMobileMenu()" class="block px-4 py-2.5 rounded-xl text-sm font-medium text-cream-100 hover:bg-white/5">Gallery</a>
+      <a href="#reservations" onclick="toggleMobileMenu()" class="block px-4 py-2.5 rounded-xl text-sm font-medium text-cream-100 hover:bg-white/5">Reservations</a>
+      <a href="#contact" onclick="toggleMobileMenu()" class="block px-4 py-2.5 rounded-xl text-sm font-medium text-cream-100 hover:bg-white/5">Contact</a>
+      <div class="pt-3 flex items-center gap-3">
+        <button onclick="toggleMobileMenu(); openMyBookingsModal();" class="flex-1 py-2.5 rounded-full border border-white/15 text-xs font-semibold text-cream-100 text-center">
+          My Bookings
+        </button>
+        <a href="#reservations" onclick="toggleMobileMenu()" class="flex-1 py-2.5 rounded-full bg-amber-500 text-obsidian-950 text-xs font-bold text-center">
+          Reserve a Table
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- =====================================================================
+       2. EDITORIAL FULL-VIEWPORT HERO SECTION
+  ====================================================================== -->
+  <section id="home" class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+    <!-- Atmospheric Background Image + Rich Vignette Overlay -->
+    <div class="absolute inset-0 z-0">
+      <img
+        src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1920&q=80"
+        onerror="this.src='https://placehold.co/1920x1080/120f0d/d97706?text=Saffron+%26+Ember'"
+        alt="Saffron and Ember Moody Dining Atmosphere"
+        class="w-full h-full object-cover object-center scale-105 opacity-45"
+      />
+      <div class="absolute inset-0 bg-gradient-to-r from-obsidian-950 via-obsidian-950/85 to-obsidian-950/40"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-obsidian-950 via-transparent to-obsidian-950/60"></div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 w-full">
+      <div class="max-w-3xl">
+        <!-- Live Status Pill -->
+        <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-obsidian-900/90 border border-amber-500/30 text-amber-300 text-xs font-medium mb-6 backdrop-blur-sm">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Open Today • 12:00 PM – 11:30 PM</span>
+          <span class="text-stone-500">|</span>
+          <span class="text-stone-300">Chef's Autumn Tasting Available</span>
+        </div>
+
+        <!-- Editorial Headline -->
+        <h1 class="font-serif text-4xl sm:text-6xl lg:text-7xl font-bold text-cream-50 leading-[1.08] tracking-tight">
+          Where Open Flame Meets <span class="italic font-medium text-amber-400">Artisanal</span> Craft.
+        </h1>
+
+        <p class="mt-6 text-base sm:text-lg text-stone-300 max-w-xl leading-relaxed">
+          Experience live oak-fire gastronomy, saffron-infused heritage spices, and seasonal organic harvests curated in an intimate, candlelit sanctuary.
+        </p>
+
+        <!-- Primary Action Buttons -->
+        <div class="mt-9 flex flex-wrap items-center gap-4">
+          <a
+            href="#reservations"
+            class="px-8 py-4 rounded-full bg-gradient-to-r from-amber-500 to-ember-600 hover:from-amber-400 hover:to-ember-500 text-obsidian-950 font-bold text-sm sm:text-base shadow-gold-glow transition-all inline-flex items-center gap-2.5"
+          >
+            <span>Book a Table</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+
+          <a
+            href="#menu"
+            class="px-8 py-4 rounded-full bg-white/5 hover:bg-white/10 border border-white/15 text-cream-50 font-semibold text-sm sm:text-base backdrop-blur-xs transition-all inline-flex items-center gap-2.5"
+          >
+            <span>Explore Menu</span>
+            <i data-lucide="book-open" class="w-4 h-4 text-amber-400"></i>
+          </a>
+        </div>
+
+        <!-- Culinary Accolades Strip -->
+        <div class="mt-14 pt-8 border-t border-white/10 grid grid-cols-3 gap-6 max-w-lg">
+          <div>
+            <span class="font-serif text-2xl sm:text-3xl font-bold text-amber-400 block">4.9 ★</span>
+            <span class="text-xs text-stone-400 mt-0.5 block">2,800+ Guest Reviews</span>
+          </div>
+          <div>
+            <span class="font-serif text-2xl sm:text-3xl font-bold text-cream-50 block">100%</span>
+            <span class="text-xs text-stone-400 mt-0.5 block">White-Oak Wood Fired</span>
+          </div>
+          <div>
+            <span class="font-serif text-2xl sm:text-3xl font-bold text-cream-50 block">2026</span>
+            <span class="text-xs text-stone-400 mt-0.5 block">Culinary Excellence Award</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       3. INTERACTIVE DIGITAL MENU SECTION
+  ====================================================================== -->
+  <section id="menu" class="py-20 sm:py-28 bg-obsidian-950 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Section Header -->
+      <div class="text-center max-w-2xl mx-auto">
+        <span class="text-xs font-bold uppercase tracking-[0.25em] text-amber-400">Seasonal Gastronomy</span>
+        <h2 class="font-serif text-3xl sm:text-5xl font-bold text-cream-50 mt-2">Curated Culinary Menu</h2>
+        <p class="text-sm sm:text-base text-stone-400 mt-3">
+          Crafted daily from local organic farms, dry-aged cuts, and hand-harvested saffron. Click any dish to inspect ingredients &amp; allergens.
+        </p>
+      </div>
+
+      <!-- Search & Dietary Filter Controls -->
+      <div class="mt-10 bg-obsidian-900/90 border border-white/10 rounded-3xl p-4 sm:p-6 shadow-luxury">
+        <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
+          <!-- Category Tabs -->
+          <div id="menu-category-tabs" class="flex items-center gap-2 overflow-x-auto pb-2 lg:pb-0 custom-scrollbar">
+            <!-- Populated via JS -->
+          </div>
+
+          <!-- Search Box -->
+          <div class="relative w-full lg:w-72 shrink-0">
+            <i data-lucide="search" class="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+            <input
+              type="text"
+              id="menu-search-input"
+              oninput="filterMenu()"
+              placeholder="Search dishes or ingredients..."
+              class="w-full pl-10 pr-4 py-2.5 rounded-full bg-obsidian-950 border border-white/10 text-sm text-cream-50 placeholder-stone-500 focus:outline-none focus:border-amber-500"
+            />
+          </div>
+        </div>
+
+        <!-- Dietary Tag Pills -->
+        <div class="mt-4 pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-xs text-stone-400 font-medium mr-1">Dietary &amp; Highlights:</span>
+            <button onclick="toggleDietaryFilter('Chef Special')" id="diet-Chef Special" class="px-3 py-1 rounded-full text-xs font-medium border border-white/10 bg-white/5 text-stone-300 hover:border-amber-400/50 transition-all">
+              ✨ Chef's Special
+            </button>
+            <button onclick="toggleDietaryFilter('Vegetarian')" id="diet-Vegetarian" class="px-3 py-1 rounded-full text-xs font-medium border border-white/10 bg-white/5 text-stone-300 hover:border-emerald-400/50 transition-all">
+              🌿 Vegetarian
+            </button>
+            <button onclick="toggleDietaryFilter('Spicy')" id="diet-Spicy" class="px-3 py-1 rounded-full text-xs font-medium border border-white/10 bg-white/5 text-stone-300 hover:border-rose-400/50 transition-all">
+              🌶️ Spicy
+            </button>
+            <button onclick="toggleDietaryFilter('Gluten-Free')" id="diet-Gluten-Free" class="px-3 py-1 rounded-full text-xs font-medium border border-white/10 bg-white/5 text-stone-300 hover:border-sky-400/50 transition-all">
+              🌾 Gluten-Free
+            </button>
+          </div>
+
+          <span id="menu-results-count" class="text-xs text-stone-400">Showing 12 dishes</span>
+        </div>
+      </div>
+
+      <!-- Menu Cards Grid -->
+      <div id="menu-grid" class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Populated dynamically via JS -->
+      </div>
+    </div>
+  </section>
+
+  <div class="gold-divider max-w-5xl mx-auto"></div>
+
+  <!-- =====================================================================
+       4. HOSPITALITY & SERVICES SECTION
+  ====================================================================== -->
+  <section id="services" class="py-20 sm:py-28 bg-obsidian-900/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
+        <div class="max-w-2xl">
+          <span class="text-xs font-bold uppercase tracking-[0.25em] text-amber-400">Bespoke Hospitality</span>
+          <h2 class="font-serif text-3xl sm:text-5xl font-bold text-cream-50 mt-2">Elevated Dining Services</h2>
+          <p class="text-sm sm:text-base text-stone-400 mt-3">
+            Whether an intimate candlelit evening, a milestone celebration, or curated off-site catering, our culinary team orchestrates every detail.
+          </p>
+        </div>
+        <a href="#reservations" class="inline-flex items-center gap-2 text-sm font-semibold text-amber-400 hover:text-amber-300">
+          <span>Book an Experience</span>
+          <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Service 1 -->
+        <div class="group bg-obsidian-900 border border-white/10 hover:border-amber-500/40 rounded-3xl p-7 transition-all hover:-translate-y-1 shadow-luxury flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <i data-lucide="flame" class="w-6 h-6"></i>
+            </div>
+            <h3 class="font-serif text-xl font-bold text-cream-50">Fine Dining &amp; Ambience</h3>
+            <p class="text-sm text-stone-400 mt-3 leading-relaxed">
+              Immerse yourself in warm acoustics, open hearth views, and a 7-course seasonal tasting menu paired with artisanal zero-proof elixirs.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-white/10">
+            <button onclick="preselectBooking('Main Dining Room', 'Casual')" class="text-xs font-bold uppercase tracking-wider text-amber-400 hover:text-amber-300 inline-flex items-center gap-1.5">
+              <span>Reserve Main Room</span>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Service 2 -->
+        <div class="group bg-obsidian-900 border border-white/10 hover:border-amber-500/40 rounded-3xl p-7 transition-all hover:-translate-y-1 shadow-luxury flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <i data-lucide="sparkles" class="w-6 h-6"></i>
+            </div>
+            <h3 class="font-serif text-xl font-bold text-cream-50">Private Events &amp; Celebrations</h3>
+            <p class="text-sm text-stone-400 mt-3 leading-relaxed">
+              Host anniversaries, executive dinners, or intimate weddings in our Velvet Private Vault for up to 24 guests with personalized menus.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-white/10">
+            <button onclick="preselectBooking('Private Booth', 'Anniversary')" class="text-xs font-bold uppercase tracking-wider text-amber-400 hover:text-amber-300 inline-flex items-center gap-1.5">
+              <span>Book Private Booth</span>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Service 3 -->
+        <div class="group bg-obsidian-900 border border-white/10 hover:border-amber-500/40 rounded-3xl p-7 transition-all hover:-translate-y-1 shadow-luxury flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <i data-lucide="chef-hat" class="w-6 h-6"></i>
+            </div>
+            <h3 class="font-serif text-xl font-bold text-cream-50">Gourmet Catering</h3>
+            <p class="text-sm text-stone-400 mt-3 leading-relaxed">
+              Full-service luxury catering featuring live charcoal stations, plated banquets, and dedicated sommeliers &amp; hospitality staff at your venue.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-white/10">
+            <a href="#contact" class="text-xs font-bold uppercase tracking-wider text-amber-400 hover:text-amber-300 inline-flex items-center gap-1.5">
+              <span>Inquire for Events</span>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Service 4 -->
+        <div class="group bg-obsidian-900 border border-white/10 hover:border-amber-500/40 rounded-3xl p-7 transition-all hover:-translate-y-1 shadow-luxury flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <i data-lucide="shopping-bag" class="w-6 h-6"></i>
+            </div>
+            <h3 class="font-serif text-xl font-bold text-cream-50">Express Takeaway &amp; Delivery</h3>
+            <p class="text-sm text-stone-400 mt-3 leading-relaxed">
+              Savor Saffron &amp; Ember at home. Eco-insulated thermal packaging preserves crisp textures and wood-fired aroma right to your doorstep.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-white/10">
+            <button onclick="openTastingDrawer()" class="text-xs font-bold uppercase tracking-wider text-amber-400 hover:text-amber-300 inline-flex items-center gap-1.5">
+              <span>Open Tasting Order</span>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       5. INTERACTIVE FOOD & AMBIENCE GALLERY (WITH LIGHTBOX)
+  ====================================================================== -->
+  <section id="gallery" class="py-20 sm:py-28 bg-obsidian-950">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-[0.25em] text-amber-400">Visual Journal</span>
+          <h2 class="font-serif text-3xl sm:text-5xl font-bold text-cream-50 mt-2">Gallery &amp; Atmosphere</h2>
+        </div>
+
+        <!-- Gallery Filter Pills -->
+        <div id="gallery-filter-tabs" class="flex flex-wrap items-center gap-2">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+
+      <!-- Responsive Photo Grid -->
+      <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <!-- Populated via JS -->
+      </div>
+    </div>
+  </section>
+
+  <div class="gold-divider max-w-5xl mx-auto"></div>
+
+  <!-- =====================================================================
+       6. INTERACTIVE TABLE-BOOKING / RESERVATION INTERFACE
+  ====================================================================== -->
+  <section id="reservations" class="py-20 sm:py-28 bg-obsidian-900/60 relative overflow-hidden">
+    <!-- Subtle Warm Ambient Glow -->
+    <div class="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-amber-500/10 blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="text-center max-w-2xl mx-auto mb-14">
+        <span class="text-xs font-bold uppercase tracking-[0.25em] text-amber-400">Instant Confirmation</span>
+        <h2 class="font-serif text-3xl sm:text-5xl font-bold text-cream-50 mt-2">Reserve Your Table</h2>
+        <p class="text-sm sm:text-base text-stone-400 mt-3">
+          Select your preferred date, seating ambiance, and dining time. For parties larger than 12, please contact our concierge directly.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <!-- LEFT 8 COLS: INTERACTIVE RESERVATION FORM -->
+        <form id="reservation-form" onsubmit="handleReservationSubmit(event)" class="lg:col-span-8 bg-obsidian-900 border border-white/10 rounded-3xl p-6 sm:p-8 shadow-luxury space-y-6">
+
+          <!-- Step 1: Date, Party Size & Occasion -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label for="res-date" class="block text-xs font-bold uppercase tracking-wider text-stone-400 mb-2">1. Select Date *</label>
+              <input
+                type="date"
+                id="res-date"
+                required
+                onchange="updateBookingSummary()"
+                class="w-full px-4 py-3 rounded-xl bg-obsidian-950 border border-white/15 text-sm text-cream-50 focus:outline-none focus:border-amber-500"
+              />
+            </div>
+
+            <div>
+              <label for="res-guests" class="block text-xs font-bold uppercase tracking-wider text-stone-400 mb-2">2. Party Size *</label>
+              <select
+                id="res-guests"
+                onchange="updateBookingSummary()"
+                class="w-full px-4 py-3 rounded-xl bg-obsidian-950 border border-white/15 text-sm text-cream-50 focus:outline-none focus:border-amber-500"
+              >
+                <option value="1 Guest">1 Guest (Solo Dining)</option>
+                <option value="2 Guests" selected>2 Guests (Intimate Table)</option>
+                <option value="3 Guests">3 Guests</option>
+                <option value="4 Guests">4 Guests</option>
+                <option value="5 Guests">5 Guests</option>
+                <option value="6 Guests">6 Guests</option>
+                <option value="8 Guests">8 Guests (Group Table)</option>
+                <option value="10+ Guests">10–12 Guests (Banquet)</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="res-occasion" class="block text-xs font-bold uppercase tracking-wider text-stone-400 mb-2">3. Occasion</label>
+              <select
+                id="res-occasion"
+                onchange="updateBookingSummary()"
+                class="w-full px-4 py-3 rounded-xl bg-obsidian-950 border border-white/15 text-sm text-cream-50 focus:outline-none focus:border-amber-500"
+              >
+                <option value="Casual">Casual Dining</option>
+                <option value="Birthday">Birthday Celebration</option>
+                <option value="Anniversary">Anniversary</option>
+                <option value="Business Dinner">Business Dinner</option>
+                <option value="Date Night">Romantic Date Night</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Step 2: Interactive Time Slot Pills -->
+          <div>
+            <div class="flex items-center justify-between mb-2.5">
+              <label class="block text-xs font-bold uppercase tracking-wider text-stone-400">4. Choose Seating Time *</label>
+              <span class="text-[11px] text-emerald-400 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Live availability
+              </span>
+            </div>
+
+            <div class="space-y-3">
+              <div>
+                <span class="text-[11px] font-semibold text-stone-500 uppercase tracking-wider block mb-2">Lunch Service</span>
+                <div id="lunch-slots-container" class="flex flex-wrap gap-2"></div>
+              </div>
+              <div>
+                <span class="text-[11px] font-semibold text-stone-500 uppercase tracking-wider block mb-2">Dinner Service</span>
+                <div id="dinner-slots-container" class="flex flex-wrap gap-2"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Seating Preference Cards -->
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-stone-400 mb-2.5">5. Seating Preference</label>
+            <div id="seating-options-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+
+          <!-- Step 4: Guest Contact Info -->
+          <div class="pt-4 border-t border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label for="res-name" class="block text-xs font-semibold text-stone-300 mb-1.5">Full Name *</label>
+              <input
+                type="text"
+                id="res-name"
+                required
+                placeholder="e.g. Zayd Al-Mansoor"
+                oninput="updateBookingSummary()"
+                class="w-full px-4 py-3 rounded-xl bg-obsidian-950 border border-white/15 text-sm text-cream-50 placeholder-stone-500 focus:outline-none focus:border-amber-500"
+              />
+            </div>
+            <div>
+              <label for="res-phone" class="block text-xs font-semibold text-stone-300 mb-1.5">Phone Number *</label>
+              <input
+                type="tel"
+                id="res-phone"
+                required
+                placeholder="+92 300 1234567"
+                class="w-full px-4 py-3 rounded-xl bg-obsidian-950 border border-white/15 text-sm text-cream-50 placeholder-stone-500 focus:outline-none focus:border-amber-500"
+              />
+            </div>
+            <div>
+              <label for="res-email" class="block text-xs font-semibold text-stone-300 mb-1.5">Email Address *</label>
+              <input
+                type="email"
+                id="res-email"
+                required
+                placeholder="guest@example.com"
+                class="w-full px-4 py-3 rounded-xl bg-obsidian-950 border border-white/15 text-sm text-cream-50 placeholder-stone-500 focus:outline-none focus:border-amber-500"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label for="res-notes" class="block text-xs font-semibold text-stone-300 mb-1.5">Dietary Allergies or Special Requests (Optional)</label>
+            <textarea
+              id="res-notes"
+              rows="2"
+              placeholder="Nut allergy, window table request, birthday dessert note..."
+              class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-white/15 text-sm text-cream-50 placeholder-stone-500 focus:outline-none focus:border-amber-500"
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-ember-600 hover:from-amber-400 hover:to-ember-500 text-obsidian-950 font-bold text-base shadow-gold-glow transition-all flex items-center justify-center gap-2"
+          >
+            <span>Confirm Table Reservation</span>
+            <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+          </button>
+        </form>
+
+        <!-- RIGHT 4 COLS: LIVE RESERVATION SUMMARY TICKET -->
+        <div class="lg:col-span-4 sticky top-24 space-y-5">
+          <div class="bg-gradient-to-b from-obsidian-800 to-obsidian-900 border border-amber-500/30 rounded-3xl p-6 shadow-luxury">
+            <div class="flex items-center justify-between pb-4 border-b border-white/10">
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-400">Live Pass Preview</span>
+                <h3 class="font-serif text-xl font-bold text-cream-50 mt-0.5">Reservation Summary</h3>
+              </div>
+              <div class="w-10 h-10 rounded-full bg-amber-500/15 text-amber-400 flex items-center justify-center">
+                <i data-lucide="ticket" class="w-5 h-5"></i>
+              </div>
+            </div>
+
+            <div class="py-5 space-y-4 text-sm">
+              <div class="flex justify-between">
+                <span class="text-stone-400">Guest</span>
+                <span id="summary-name" class="font-semibold text-cream-50">Valued Guest</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-stone-400">Date</span>
+                <span id="summary-date" class="font-semibold text-cream-50">—</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-stone-400">Time</span>
+                <span id="summary-time" class="font-bold text-amber-400">7:30 PM</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-stone-400">Party Size</span>
+                <span id="summary-guests" class="font-semibold text-cream-50">2 Guests</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-stone-400">Seating</span>
+                <span id="summary-seating" class="font-semibold text-cream-50">Main Dining Room</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-stone-400">Occasion</span>
+                <span id="summary-occasion" class="font-semibold text-cream-50">Casual Dining</span>
+              </div>
+            </div>
+
+            <div class="pt-4 border-t border-dashed border-white/15 text-xs text-stone-400 space-y-1.5">
+              <p class="flex items-center gap-2">
+                <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+                <span>Complimentary cancellation up to 2 hours prior.</span>
+              </p>
+              <p class="flex items-center gap-2">
+                <i data-lucide="clock" class="w-4 h-4 text-amber-400 shrink-0"></i>
+                <span>Tables held for 15 minutes past booking time.</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Saved Reservations Quick Box -->
+          <div class="bg-obsidian-900 border border-white/10 rounded-2xl p-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-white/5 text-amber-400 flex items-center justify-center">
+                <i data-lucide="bookmark-check" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-cream-50">Saved Reservations</p>
+                <p id="saved-res-count-label" class="text-[11px] text-stone-400">0 active passes stored</p>
+              </div>
+            </div>
+            <button onclick="openMyBookingsModal()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-semibold text-amber-400">
+              View All
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       7. CONTACT DETAILS, LOCATION & FOOTER
+  ====================================================================== -->
+  <section id="contact" class="py-20 bg-obsidian-950 border-t border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        <!-- Contact Info -->
+        <div class="lg:col-span-5 space-y-6">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-[0.25em] text-amber-400">Visit Us</span>
+            <h2 class="font-serif text-3xl sm:text-4xl font-bold text-cream-50 mt-2">Location &amp; Contact</h2>
+            <p class="text-sm text-stone-400 mt-2 leading-relaxed">
+              Nestled in the heart of the Culinary Quarter. Valet parking is available at the main courtyard entrance from 5:00 PM daily.
+            </p>
+          </div>
+
+          <div class="space-y-4 text-sm">
+            <div class="flex items-start gap-3.5 p-4 rounded-2xl bg-obsidian-900 border border-white/10">
+              <i data-lucide="map-pin" class="w-5 h-5 text-amber-400 shrink-0 mt-0.5"></i>
+              <div>
+                <h4 class="font-bold text-cream-50">Flagship Address</h4>
+                <p class="text-stone-400 mt-0.5">742 Ember Courtyard, Heritage Boulevard, Culinary District</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3.5 p-4 rounded-2xl bg-obsidian-900 border border-white/10">
+              <i data-lucide="clock" class="w-5 h-5 text-amber-400 shrink-0 mt-0.5"></i>
+              <div>
+                <h4 class="font-bold text-cream-50">Opening Hours</h4>
+                <p class="text-stone-400 mt-0.5">Mon – Thu: 12:00 PM – 11:00 PM</p>
+                <p class="text-stone-400">Fri – Sun: 12:00 PM – 12:30 AM</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <a href="tel:+15558904321" class="flex items-center gap-3 p-4 rounded-2xl bg-obsidian-900 border border-white/10 hover:border-amber-500/40 transition-colors">
+                <i data-lucide="phone" class="w-5 h-5 text-amber-400 shrink-0"></i>
+                <div>
+                  <span class="text-[11px] text-stone-400 block">Concierge Desk</span>
+                  <span class="font-semibold text-cream-50">+1 (555) 890-4321</span>
+                </div>
+              </a>
+
+              <a href="mailto:concierge@saffronember.com" class="flex items-center gap-3 p-4 rounded-2xl bg-obsidian-900 border border-white/10 hover:border-amber-500/40 transition-colors">
+                <i data-lucide="mail" class="w-5 h-5 text-amber-400 shrink-0"></i>
+                <div class="truncate">
+                  <span class="text-[11px] text-stone-400 block">Private Dining</span>
+                  <span class="font-semibold text-cream-50">concierge@saffronember.com</span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stylized Architectural Map & Newsletter Card -->
+        <div class="lg:col-span-7 space-y-6">
+          <!-- Interactive Stylized Map Card -->
+          <div class="relative h-64 sm:h-72 rounded-3xl overflow-hidden border border-white/10 bg-obsidian-900 shadow-luxury group">
+            <img
+              src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1200&q=80"
+              onerror="this.src='https://placehold.co/1200x500/1c1714/d97706?text=742+Ember+Courtyard+Map'"
+              alt="Neighborhood Map Preview"
+              class="w-full h-full object-cover opacity-35 grayscale contrast-125 group-hover:scale-105 transition-transform duration-700"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-obsidian-950 via-obsidian-950/30 to-transparent"></div>
+
+            <!-- Interactive Map Pin Marker -->
+            <div class="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
+              <div class="w-12 h-12 rounded-full bg-amber-500 text-obsidian-950 flex items-center justify-center shadow-gold-glow animate-bounce">
+                <i data-lucide="map-pin" class="w-6 h-6"></i>
+              </div>
+              <div class="mt-3 px-4 py-2 rounded-2xl bg-obsidian-950/90 border border-amber-500/40 backdrop-blur-md">
+                <p class="font-serif font-bold text-sm text-cream-50">Saffron &amp; Ember Flagship</p>
+                <p class="text-xs text-stone-400">742 Ember Courtyard • Valet Entrance</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chef's Table Newsletter -->
+          <form onsubmit="handleNewsletterSubmit(event)" class="bg-obsidian-900 border border-white/10 rounded-3xl p-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+            <div>
+              <h4 class="font-serif text-lg font-bold text-cream-50">Join the Chef's Seasonal Dispatch</h4>
+              <p class="text-xs text-stone-400 mt-0.5">Receive priority invitations to truffle dinners and seasonal menu unveilings.</p>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <input
+                type="email"
+                id="newsletter-email"
+                required
+                placeholder="Enter your email"
+                class="px-4 py-2.5 rounded-full bg-obsidian-950 border border-white/15 text-xs text-cream-50 placeholder-stone-500 focus:outline-none focus:border-amber-500 w-full sm:w-52"
+              />
+              <button type="submit" class="px-5 py-2.5 rounded-full bg-amber-500 hover:bg-amber-400 text-obsidian-950 font-bold text-xs shrink-0 transition-colors">
+                Subscribe
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Bottom Copyright Bar -->
+      <div class="mt-14 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-500">
+        <div class="flex items-center gap-2">
+          <i data-lucide="flame" class="w-4 h-4 text-amber-500"></i>
+          <span class="font-serif font-bold text-cream-100 text-sm">Saffron &amp; Ember</span>
+          <span>• © 2026 All Rights Reserved.</span>
+        </div>
+        <div class="flex items-center gap-6">
+          <a href="#menu" class="hover:text-amber-400 transition-colors">Seasonal Menu</a>
+          <a href="#services" class="hover:text-amber-400 transition-colors">Private Dining</a>
+          <a href="#reservations" class="hover:text-amber-400 transition-colors">Reservations</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       8. DISH DETAIL & INGREDIENTS MODAL
+  ====================================================================== -->
+  <div id="dish-detail-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 bg-black/80 backdrop-blur-sm" onclick="closeDishModal()"></div>
+    <div id="dish-detail-content" class="relative w-full max-w-xl bg-obsidian-900 border border-white/15 rounded-3xl overflow-hidden shadow-2xl animate-fade-up">
+      <!-- Populated via JS -->
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       9. TASTING LIST / PRE-ORDER DRAWER
+  ====================================================================== -->
+  <div id="tasting-drawer" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 bg-black/75 backdrop-blur-xs" onclick="closeTastingDrawer()"></div>
+    <div class="fixed inset-y-0 right-0 w-full max-w-md bg-obsidian-900 border-l border-white/10 shadow-2xl flex flex-col">
+      <div class="px-6 py-5 border-b border-white/10 flex items-center justify-between">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-widest text-amber-400">Table Pre-Selection</span>
+          <h3 class="font-serif text-xl font-bold text-cream-50">Your Tasting List</h3>
+        </div>
+        <button onclick="closeTastingDrawer()" class="p-2 rounded-full bg-white/5 hover:bg-white/10 text-stone-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div id="tasting-items-container" class="flex-1 overflow-y-auto p-6 space-y-3 custom-scrollbar">
+        <!-- Populated via JS -->
+      </div>
+
+      <div id="tasting-drawer-footer" class="p-6 border-t border-white/10 bg-obsidian-950/70">
+        <div class="flex items-center justify-between text-sm mb-4">
+          <span class="text-stone-400">Estimated Subtotal</span>
+          <span id="tasting-subtotal" class="font-serif text-xl font-bold text-amber-400">$0.00</span>
+        </div>
+        <button
+          onclick="attachTastingToReservation()"
+          class="w-full py-3.5 rounded-full bg-gradient-to-r from-amber-500 to-ember-600 hover:from-amber-400 hover:to-ember-500 text-obsidian-950 font-bold text-sm shadow-gold-glow transition-all"
+        >
+          Attach Selection to Table Booking
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       10. RESERVATION CONFIRMATION TICKET MODAL & MY BOOKINGS MODAL
+  ====================================================================== -->
+  <div id="booking-confirm-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 bg-black/80 backdrop-blur-sm" onclick="closeConfirmModal()"></div>
+    <div id="booking-confirm-content" class="relative w-full max-w-md bg-obsidian-900 border border-amber-500/40 rounded-3xl overflow-hidden shadow-2xl animate-fade-up">
+      <!-- Populated via JS -->
+    </div>
+  </div>
+
+  <div id="my-bookings-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 bg-black/80 backdrop-blur-sm" onclick="closeMyBookingsModal()"></div>
+    <div class="relative w-full max-w-lg bg-obsidian-900 border border-white/15 rounded-3xl overflow-hidden shadow-2xl animate-fade-up">
+      <div class="px-6 py-4 border-b border-white/10 flex items-center justify-between">
+        <div>
+          <h3 class="font-serif text-xl font-bold text-cream-50">Your Saved Reservations</h3>
+          <p class="text-xs text-stone-400">Manage upcoming dining passes stored on this device.</p>
+        </div>
+        <button onclick="closeMyBookingsModal()" class="p-2 rounded-full bg-white/5 hover:bg-white/10 text-stone-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div id="my-bookings-list" class="p-6 max-h-[65vh] overflow-y-auto space-y-3 custom-scrollbar">
+        <!-- Populated via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       11. GALLERY FULLSCREEN LIGHTBOX MODAL
+  ====================================================================== -->
+  <div id="gallery-lightbox" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-md" role="dialog" aria-modal="true">
+    <button onclick="closeLightbox()" class="absolute top-5 right-5 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white z-20" title="Close (ESC)">
+      <i data-lucide="x" class="w-6 h-6"></i>
+    </button>
+
+    <button onclick="navigateLightbox(-1)" class="absolute left-4 sm:left-8 p-3 rounded-full bg-white/10 hover:bg-amber-500 hover:text-obsidian-950 text-white z-20 transition-colors" title="Previous">
+      <i data-lucide="chevron-left" class="w-6 h-6"></i>
+    </button>
+
+    <div class="max-w-4xl w-full text-center">
+      <img id="lightbox-img" src="" alt="Gallery Preview" class="max-h-[75vh] mx-auto rounded-2xl shadow-2xl object-contain" />
+      <div class="mt-4">
+        <span id="lightbox-category" class="text-xs font-bold uppercase tracking-widest text-amber-400"></span>
+        <h4 id="lightbox-title" class="font-serif text-xl font-bold text-cream-50 mt-1"></h4>
+      </div>
+    </div>
+
+    <button onclick="navigateLightbox(1)" class="absolute right-4 sm:right-8 p-3 rounded-full bg-white/10 hover:bg-amber-500 hover:text-obsidian-950 text-white z-20 transition-colors" title="Next">
+      <i data-lucide="chevron-right" class="w-6 h-6"></i>
+    </button>
+  </div>
+
+  <!-- =====================================================================
+       12. TOAST NOTIFICATION CONTAINER
+  ====================================================================== -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- =====================================================================
+       13. APPLICATION JAVASCRIPT LOGIC
+  ====================================================================== -->
+  <script>
+    /**
+     * 1. Curated Culinary Menu Dataset
+     */
+    const MENU_ITEMS = [
+      {
+        id: 'dish-1',
+        name: 'Saffron & Charred Scallop Crudo',
+        category: 'Starters',
+        price: 24,
+        prepTime: '12 mins',
+        calories: '310 kcal',
+        image: 'https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=900&q=80',
+        tags: ['Chef Special', 'Gluten-Free'],
+        description: 'Hokkaido sea scallops lightly kissed by white-oak embers, Kashmiri saffron emulsion, pickled sea fennel, and crispy shallots.',
+        ingredients: ['Hokkaido Scallops', 'Kashmiri Saffron Threads', 'Meyer Lemon Oil', 'Sea Fennel', 'Crispy Shallots'],
+        allergens: 'Shellfish'
+      },
+      {
+        id: 'dish-2',
+        name: 'Smoked Burrata & Heirloom Fig',
+        category: 'Starters',
+        price: 19,
+        prepTime: '10 mins',
+        calories: '420 kcal',
+        image: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=900&q=80',
+        tags: ['Vegetarian', 'Gluten-Free'],
+        description: 'Artisanal Pugliese burrata cold-smoked over applewood, roasted Black Mission figs, spiced pistachio dukkah, and aged balsamic.',
+        ingredients: ['Pugliese Burrata', 'Black Mission Figs', 'Roasted Pistachios', '25-Year Balsamic', 'Wildflower Honey'],
+        allergens: 'Dairy, Tree Nuts'
+      },
+      {
+        id: 'dish-3',
+        name: 'Harissa Fire-Roasted Prawns',
+        category: 'Starters',
+        price: 22,
+        prepTime: '14 mins',
+        calories: '360 kcal',
+        image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=900&q=80',
+        tags: ['Spicy', 'Gluten-Free'],
+        description: 'Wild tiger prawns blistered over open charcoal with rose-petal harissa butter, charred lime, and herb labneh.',
+        ingredients: ['Wild Tiger Prawns', 'Rose Harissa', 'Whipped Labneh', 'Charred Lime', 'Aleppo Pepper'],
+        allergens: 'Shellfish, Dairy'
+      },
+      {
+        id: 'dish-4',
+        name: 'Ember-Aged Wagyu Ribeye (12oz)',
+        category: 'Wood-Fired & Grill',
+        price: 68,
+        prepTime: '22 mins',
+        calories: '840 kcal',
+        image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=900&q=80',
+        tags: ['Chef Special', 'Gluten-Free'],
+        description: '45-day dry-aged A5 crossbred ribeye seared over 900°F white-oak coals, served with roasted bone marrow jus and black garlic butter.',
+        ingredients: ['Dry-Aged Ribeye', 'Black Garlic', 'Bone Marrow Jus', 'Maldon Sea Salt', 'Charred Shallot'],
+        allergens: 'Dairy'
+      },
+      {
+        id: 'dish-5',
+        name: 'Cedar-Plank Wild King Salmon',
+        category: 'Wood-Fired & Grill',
+        price: 42,
+        prepTime: '18 mins',
+        calories: '590 kcal',
+        image: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=900&q=80',
+        tags: ['Gluten-Free'],
+        description: 'Sustainably caught Pacific King salmon slow-roasted on aromatic cedar, fennel pollen glaze, and charred baby broccolini.',
+        ingredients: ['Pacific King Salmon', 'Fennel Pollen', 'Charred Broccolini', 'Saffron Beurre Blanc'],
+        allergens: 'Fish, Dairy'
+      },
+      {
+        id: 'dish-6',
+        name: 'Saffron Braised Lamb Shank',
+        category: 'Signature Mains',
+        price: 46,
+        prepTime: '20 mins',
+        calories: '780 kcal',
+        image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=900&q=80',
+        tags: ['Chef Special', 'Gluten-Free'],
+        description: '12-hour slow-braised grass-fed lamb shank in saffron & cardamom reduction over velvety parsnip purée and pomegranate gremolata.',
+        ingredients: ['Grass-Fed Lamb Shank', 'Saffron & Cardamom Jus', 'Parsnip Purée', 'Pomegranate Seeds', 'Mint'],
+        allergens: 'Dairy'
+      },
+      {
+        id: 'dish-7',
+        name: 'Black Truffle & Wild Mushroom Risotto',
+        category: 'Signature Mains',
+        price: 36,
+        prepTime: '19 mins',
+        calories: '640 kcal',
+        image: 'https://images.unsplash.com/photo-1476124369491-e7addf5db371?auto=format&fit=crop&w=900&q=80',
+        tags: ['Vegetarian', 'Chef Special', 'Gluten-Free'],
+        description: 'Acquerello carnaroli rice simmered in roasted porcini stock, shaved Umbrian black truffle, and 36-month Parmigiano-Reggiano.',
+        ingredients: ['Carnaroli Rice', 'Porcini & Chanterelles', 'Umbrian Black Truffle', 'Aged Parmigiano'],
+        allergens: 'Dairy'
+      },
+      {
+        id: 'dish-8',
+        name: 'Spiced Cauliflower Steak & Tahini',
+        category: 'Signature Mains',
+        price: 31,
+        prepTime: '16 mins',
+        calories: '490 kcal',
+        image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=80',
+        tags: ['Vegetarian', 'Spicy', 'Gluten-Free'],
+        description: 'Wood-charred heirloom cauliflower glazed with smoked chili oil, silky black sesame tahini, toasted pine nuts, and golden raisins.',
+        ingredients: ['Heirloom Cauliflower', 'Black Tahini', 'Smoked Chili Oil', 'Toasted Pine Nuts', 'Golden Raisins'],
+        allergens: 'Sesame, Tree Nuts'
+      },
+      {
+        id: 'dish-9',
+        name: 'Saffron Pistachio Tres Leches',
+        category: 'Desserts',
+        price: 16,
+        prepTime: '8 mins',
+        calories: '510 kcal',
+        image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=900&q=80',
+        tags: ['Vegetarian', 'Chef Special'],
+        description: 'Airy sponge soaked in saffron-cardamom three-milk infusion, topped with mascarpone chantilly, crushed Iranian pistachios, and edible gold.',
+        ingredients: ['Saffron Milk Infusion', 'Mascarpone Cream', 'Iranian Pistachios', 'Organic Vanilla Bean'],
+        allergens: 'Dairy, Gluten, Eggs, Tree Nuts'
+      },
+      {
+        id: 'dish-10',
+        name: 'Smoked Dark Chocolate Tart',
+        category: 'Desserts',
+        price: 17,
+        prepTime: '8 mins',
+        calories: '560 kcal',
+        image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=900&q=80',
+        tags: ['Vegetarian'],
+        description: '72% single-origin Valrhona ganache infused with subtle hearth smoke, salted espresso caramel, and hazelnut crunch.',
+        ingredients: ['72% Valrhona Chocolate', 'Espresso Caramel', 'Roasted Hazelnuts', 'Flaky Sea Salt'],
+        allergens: 'Dairy, Gluten, Tree Nuts'
+      },
+      {
+        id: 'dish-11',
+        name: 'Smoked Saffron & Blood Orange Elixir',
+        category: 'Artisanal Drinks',
+        price: 14,
+        prepTime: '5 mins',
+        calories: '120 kcal',
+        image: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=900&q=80',
+        tags: ['Vegetarian', 'Gluten-Free', 'Chef Special'],
+        description: 'House-distilled botanical zero-proof spirit shaken with Sicilian blood orange, saffron nectar, and aromatic cinnamon smoke.',
+        ingredients: ['Sicilian Blood Orange', 'Saffron Nectar', 'Botanical Distillate', 'Charred Cinnamon'],
+        allergens: 'None'
+      },
+      {
+        id: 'dish-12',
+        name: 'Cardamom & Rose Cold Brew Tonic',
+        category: 'Artisanal Drinks',
+        price: 12,
+        prepTime: '4 mins',
+        calories: '85 kcal',
+        image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=80',
+        tags: ['Vegetarian', 'Gluten-Free'],
+        description: 'Single-origin Ethiopian cold brew layered over artisanal botanical tonic water, crushed green cardamom, and Damascus rose mist.',
+        ingredients: ['Ethiopian Cold Brew', 'Botanical Tonic', 'Green Cardamom', 'Damascus Rosewater'],
+        allergens: 'None'
+      }
+    ];
+
+    /**
+     * 2. Gallery Dataset
+     */
+    const GALLERY_ITEMS = [
+      {
+        id: 'gal-1',
+        category: 'Dining Room',
+        title: 'Candlelit Main Dining Sanctuary',
+        image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        id: 'gal-2',
+        category: 'Signature Dishes',
+        title: 'White-Oak Seared Wagyu & Bone Marrow',
+        image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        id: 'gal-3',
+        category: 'Bar & Lounge',
+        title: 'Smoked Saffron & Blood Orange Elixir',
+        image: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        id: 'gal-4',
+        category: 'Signature Dishes',
+        title: 'Hokkaido Scallop Crudo & Saffron Emulsion',
+        image: 'https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        id: 'gal-5',
+        category: 'Dining Room',
+        title: 'The Velvet Private Tasting Vault',
+        image: 'https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        id: 'gal-6',
+        category: 'Signature Dishes',
+        title: 'Umbrian Black Truffle Risotto',
+        image: 'https://images.unsplash.com/photo-1476124369491-e7addf5db371?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        id: 'gal-7',
+        category: 'Bar & Lounge',
+        title: 'Evening Hearth & Sommelier Counter',
+        image: 'https://images.unsplash.com/photo-1572116469696-31de0f17cc34?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        id: 'gal-8',
+        category: 'Dining Room',
+        title: 'Twilight Courtyard Terrace',
+        image: 'https://images.unsplash.com/photo-1559329007-40df8a9345d8?auto=format&fit=crop&w=1000&q=80'
+      }
+    ];
+
+    /**
+     * 3. Reservation Slots & Seating Options
+     */
+    const LUNCH_SLOTS = ['12:30 PM', '1:15 PM', '2:00 PM', '2:45 PM'];
+    const DINNER_SLOTS = ['6:00 PM', '6:45 PM', '7:30 PM', '8:15 PM', '9:00 PM', '9:45 PM', '10:30 PM'];
+    const SEATING_OPTIONS = [
+      { id: 'Main Dining Room', icon: 'utensils', desc: 'Hearth view & warm acoustics' },
+      { id: 'Candlelight Terrace', icon: 'moon', desc: 'Open-air courtyard pergola' },
+      { id: 'Private Booth', icon: 'sparkles', desc: 'Intimate velvet alcove' },
+      { id: "Chef's Counter", icon: 'flame', desc: 'Front-row open fire kitchen' }
+    ];
+
+    /**
+     * 4. Application State
+     */
+    let activeMenuCategory = 'All';
+    let activeDietaryFilters = [];
+    let tastingList = JSON.parse(localStorage.getItem('saffron_tasting_list') || '[]');
+    let savedReservations = JSON.parse(localStorage.getItem('saffron_reservations') || '[]');
+    let selectedTimeSlot = '7:30 PM';
+    let selectedSeating = 'Main Dining Room';
+    let activeGalleryCategory = 'All';
+    let currentLightboxIndex = 0;
+    let filteredGalleryItems = [...GALLERY_ITEMS];
+
+    /**
+     * Initialize Application
+     */
+    document.addEventListener('DOMContentLoaded', () => {
+      initMenuCategories();
+      filterMenu();
+      initGallery();
+      initReservationControls();
+      updateTastingBadge();
+      updateSavedBookingsCount();
+      lucide.createIcons();
+    });
+
+    /**
+     * Mobile Nav Toggle
+     */
+    function toggleMobileMenu() {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    }
+
+    /**
+     * ===================================================================
+     * MENU FILTERING & INTERACTIVE DISH DETAILS
+     * ===================================================================
+     */
+    function initMenuCategories() {
+      const categories = ['All', 'Starters', 'Signature Mains', 'Wood-Fired & Grill', 'Desserts', 'Artisanal Drinks'];
+      const container = document.getElementById('menu-category-tabs');
+      container.innerHTML = categories.map(cat => `
+        <button
+          onclick="selectMenuCategory('${cat}')"
+          id="cat-btn-${cat.replace(/\s+/g, '-')}"
+          class="px-4 py-2 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap transition-all ${
+            cat === activeMenuCategory
+              ? 'bg-amber-500 text-obsidian-950 shadow-gold-glow'
+              : 'bg-obsidian-950 text-stone-300 hover:text-white border border-white/10'
+          }"
+        >
+          ${cat}
+        </button>
+      `).join('');
+    }
+
+    function selectMenuCategory(category) {
+      activeMenuCategory = category;
+      initMenuCategories();
+      filterMenu();
+    }
+
+    function toggleDietaryFilter(tag) {
+      const idx = activeDietaryFilters.indexOf(tag);
+      const btn = document.getElementById(`diet-${tag}`);
+      if (idx > -1) {
+        activeDietaryFilters.splice(idx, 1);
+        btn.classList.remove('bg-amber-500/20', 'border-amber-400', 'text-amber-300');
+        btn.classList.add('bg-white/5', 'border-white/10', 'text-stone-300');
+      } else {
+        activeDietaryFilters.push(tag);
+        btn.classList.add('bg-amber-500/20', 'border-amber-400', 'text-amber-300');
+        btn.classList.remove('bg-white/5', 'border-white/10', 'text-stone-300');
+      }
+      filterMenu();
+    }
+
+    function filterMenu() {
+      const query = document.getElementById('menu-search-input').value.trim().toLowerCase();
+      const filtered = MENU_ITEMS.filter(item => {
+        if (activeMenuCategory !== 'All' && item.category !== activeMenuCategory) return false;
+        if (activeDietaryFilters.length > 0 && !activeDietaryFilters.every(t => item.tags.includes(t))) return false;
+        if (query) {
+          const text = `${item.name} ${item.description} ${item.ingredients.join(' ')}`.toLowerCase();
+          if (!text.includes(query)) return false;
+        }
+        return true;
+      });
+
+      document.getElementById('menu-results-count').textContent = `Showing ${filtered.length} dish${filtered.length === 1 ? '' : 'es'}`;
+      renderMenuCards(filtered);
+    }
+
+    function renderMenuCards(items) {
+      const grid = document.getElementById('menu-grid');
+      if (items.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full bg-obsidian-900 border border-white/10 rounded-3xl p-12 text-center">
+            <i data-lucide="utensils" class="w-10 h-10 text-amber-400 mx-auto mb-3"></i>
+            <h3 class="font-serif text-xl font-bold text-cream-50">No matching dishes found</h3>
+            <p class="text-sm text-stone-400 mt-1">Try clearing your search keyword or active dietary filters.</p>
+            <button onclick="resetMenuFilters()" class="mt-5 px-6 py-2.5 rounded-full bg-amber-500 text-obsidian-950 font-bold text-xs">
+              Show Full Menu
+            </button>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      grid.innerHTML = items.map(dish => {
+        const tagBadges = dish.tags.map(tag => {
+          let style = 'bg-amber-500/15 text-amber-300 border-amber-500/30';
+          if (tag === 'Vegetarian') style = 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30';
+          if (tag === 'Spicy') style = 'bg-rose-500/15 text-rose-300 border-rose-500/30';
+          if (tag === 'Gluten-Free') style = 'bg-sky-500/15 text-sky-300 border-sky-500/30';
+          return `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold border ${style}">${tag}</span>`;
+        }).join('');
+
+        return `
+          <article class="group bg-obsidian-900 border border-white/10 hover:border-amber-500/40 rounded-3xl overflow-hidden shadow-luxury flex flex-col justify-between transition-all hover:-translate-y-1">
+            <div>
+              <!-- Dish Image -->
+              <div onclick="openDishModal('${dish.id}')" class="relative h-52 overflow-hidden cursor-pointer bg-obsidian-800">
+                <img
+                  src="${dish.image}"
+                  onerror="this.src='https://placehold.co/800x600/1c1714/d97706?text=${encodeURIComponent(dish.name)}'"
+                  alt="${dish.name}"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-obsidian-900 via-transparent to-transparent"></div>
+                <span class="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-obsidian-950/85 backdrop-blur-md text-[11px] font-semibold text-stone-300 border border-white/10">
+                  ${dish.category}
+                </span>
+                <span class="absolute bottom-3 right-3.5 px-3 py-1 rounded-full bg-amber-500 text-obsidian-950 font-serif font-bold text-base shadow-md">
+                  $${dish.price}
+                </span>
+              </div>
+
+              <!-- Dish Body -->
+              <div class="p-6">
+                <div class="flex flex-wrap gap-1.5 mb-2.5">
+                  ${tagBadges}
+                </div>
+                <h3 onclick="openDishModal('${dish.id}')" class="font-serif text-xl font-bold text-cream-50 group-hover:text-amber-400 transition-colors cursor-pointer">
+                  ${dish.name}
+                </h3>
+                <p class="text-xs sm:text-sm text-stone-400 mt-2 line-clamp-2 leading-relaxed">
+                  ${dish.description}
+                </p>
+              </div>
+            </div>
+
+            <!-- Footer Actions -->
+            <div class="px-6 pb-6 pt-3 border-t border-white/10 flex items-center justify-between gap-3">
+              <button
+                onclick="openDishModal('${dish.id}')"
+                class="text-xs font-semibold text-stone-300 hover:text-amber-400 inline-flex items-center gap-1 transition-colors"
+              >
+                <i data-lucide="info" class="w-3.5 h-3.5"></i>
+                <span>Ingredients</span>
+              </button>
+
+              <button
+                onclick="addToTastingList('${dish.id}')"
+                class="px-4 py-2 rounded-full bg-white/5 hover:bg-amber-500 text-cream-50 hover:text-obsidian-950 border border-white/15 hover:border-amber-500 text-xs font-bold transition-all inline-flex items-center gap-1.5"
+              >
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Add to Tasting</span>
+              </button>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    function resetMenuFilters() {
+      activeMenuCategory = 'All';
+      activeDietaryFilters = [];
+      document.getElementById('menu-search-input').value = '';
+      document.querySelectorAll('[id^="diet-"]').forEach(btn => {
+        btn.classList.remove('bg-amber-500/20', 'border-amber-400', 'text-amber-300');
+        btn.classList.add('bg-white/5', 'border-white/10', 'text-stone-300');
+      });
+      initMenuCategories();
+      filterMenu();
+    }
+
+    /**
+     * Dish Detail Modal
+     */
+    function openDishModal(dishId) {
+      const dish = MENU_ITEMS.find(d => d.id === dishId);
+      if (!dish) return;
+
+      const content = document.getElementById('dish-detail-content');
+      content.innerHTML = `
+        <div class="relative h-64 bg-obsidian-800">
+          <img
+            src="${dish.image}"
+            onerror="this.src='https://placehold.co/800x500/1c1714/d97706?text=${encodeURIComponent(dish.name)}'"
+            alt="${dish.name}"
+            class="w-full h-full object-cover"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-obsidian-900 via-obsidian-900/20 to-transparent"></div>
+          <button onclick="closeDishModal()" class="absolute top-4 right-4 p-2.5 rounded-full bg-obsidian-950/80 text-white hover:bg-amber-500 hover:text-obsidian-950 transition-colors">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+          <span class="absolute bottom-4 left-6 px-3 py-1 rounded-full bg-amber-500 text-obsidian-950 font-serif font-bold text-lg">
+            $${dish.price}
+          </span>
+        </div>
+
+        <div class="p-6 sm:p-7 space-y-5">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-widest text-amber-400">${dish.category}</span>
+            <h3 class="font-serif text-2xl sm:text-3xl font-bold text-cream-50 mt-1">${dish.name}</h3>
+            <p class="text-sm text-stone-300 mt-2.5 leading-relaxed">${dish.description}</p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 p-3.5 rounded-2xl bg-obsidian-950 border border-white/10 text-xs">
+            <div>
+              <span class="text-stone-500 block">Preparation Time</span>
+              <span class="font-bold text-cream-50 mt-0.5 block">${dish.prepTime}</span>
+            </div>
+            <div>
+              <span class="text-stone-500 block">Energy / Portion</span>
+              <span class="font-bold text-cream-50 mt-0.5 block">${dish.calories}</span>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-stone-400 mb-2">Key Artisanal Ingredients</h4>
+            <div class="flex flex-wrap gap-1.5">
+              ${dish.ingredients.map(ing => `
+                <span class="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-xs text-cream-100">${ing}</span>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="text-xs text-stone-400 bg-rose-500/10 border border-rose-500/20 px-4 py-2.5 rounded-xl">
+            <strong class="text-rose-300">Allergen Notice:</strong> ${dish.allergens}
+          </div>
+
+          <div class="pt-2 flex items-center gap-3">
+            <button
+              onclick="addToTastingList('${dish.id}'); closeDishModal();"
+              class="flex-1 py-3.5 rounded-full bg-gradient-to-r from-amber-500 to-ember-600 text-obsidian-950 font-bold text-sm shadow-gold-glow"
+            >
+              Add to Tasting List ($${dish.price})
+            </button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('dish-detail-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeDishModal() {
+      document.getElementById('dish-detail-modal').classList.add('hidden');
+    }
+
+    /**
+     * ===================================================================
+     * TASTING LIST / PRE-ORDER DRAWER
+     * ===================================================================
+     */
+    function addToTastingList(dishId) {
+      const existing = tastingList.find(item => item.id === dishId);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        tastingList.push({ id: dishId, qty: 1 });
+      }
+      saveTastingList();
+      const dish = MENU_ITEMS.find(d => d.id === dishId);
+      showToast(`Added "${dish.name}" to Tasting List`);
+    }
+
+    function updateTastingQty(dishId, delta) {
+      const idx = tastingList.findIndex(i => i.id === dishId);
+      if (idx === -1) return;
+      tastingList[idx].qty += delta;
+      if (tastingList[idx].qty <= 0) {
+        tastingList.splice(idx, 1);
+      }
+      saveTastingList();
+      renderTastingDrawer();
+    }
+
+    function saveTastingList() {
+      localStorage.setItem('saffron_tasting_list', JSON.stringify(tastingList));
+      updateTastingBadge();
+    }
+
+    function updateTastingBadge() {
+      const totalItems = tastingList.reduce((sum, item) => sum + item.qty, 0);
+      document.getElementById('tasting-count-badge').textContent = totalItems;
+    }
+
+    function openTastingDrawer() {
+      renderTastingDrawer();
+      document.getElementById('tasting-drawer').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeTastingDrawer() {
+      document.getElementById('tasting-drawer').classList.add('hidden');
+    }
+
+    function renderTastingDrawer() {
+      const container = document.getElementById('tasting-items-container');
+      const subtotalEl = document.getElementById('tasting-subtotal');
+
+      if (tastingList.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-16">
+            <i data-lucide="utensils-crossed" class="w-10 h-10 text-stone-600 mx-auto mb-3"></i>
+            <h4 class="font-serif text-lg font-bold text-cream-50">Your Tasting List is Empty</h4>
+            <p class="text-xs text-stone-400 mt-1 max-w-xs mx-auto">Explore our menu and add dishes you would like prepared upon arrival or for express takeaway.</p>
+          </div>
+        `;
+        subtotalEl.textContent = '$0.00';
+        lucide.createIcons();
+        return;
+      }
+
+      let subtotal = 0;
+      container.innerHTML = tastingList.map(entry => {
+        const dish = MENU_ITEMS.find(d => d.id === entry.id);
+        if (!dish) return '';
+        subtotal += dish.price * entry.qty;
+        return `
+          <div class="p-3.5 rounded-2xl bg-obsidian-950 border border-white/10 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <img src="${dish.image}" alt="${dish.name}" class="w-14 h-14 rounded-xl object-cover shrink-0" />
+              <div>
+                <h4 class="font-serif font-bold text-sm text-cream-50 leading-snug">${dish.name}</h4>
+                <span class="text-xs font-semibold text-amber-400">$${dish.price} each</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <button onclick="updateTastingQty('${dish.id}', -1)" class="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-sm font-bold">-</button>
+              <span class="text-xs font-bold w-4 text-center">${entry.qty}</span>
+              <button onclick="updateTastingQty('${dish.id}', 1)" class="w-7 h-7 rounded-full bg-amber-500 text-obsidian-950 flex items-center justify-center text-sm font-bold">+</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
+      lucide.createIcons();
+    }
+
+    function attachTastingToReservation() {
+      closeTastingDrawer();
+      const notesField = document.getElementById('res-notes');
+      if (tastingList.length > 0) {
+        const summary = tastingList.map(i => {
+          const d = MENU_ITEMS.find(m => m.id === i.id);
+          return `${i.qty}x ${d.name}`;
+        }).join(', ');
+        notesField.value = `Pre-selected Tasting Menu: ${summary}`;
+      }
+      document.getElementById('reservations').scrollIntoView({ behavior: 'smooth' });
+      showToast('Tasting dishes attached to your table booking notes!');
+    }
+
+    /**
+     * ===================================================================
+     * GALLERY & LIGHTBOX
+     * ===================================================================
+     */
+    function initGallery() {
+      const categories = ['All', 'Signature Dishes', 'Dining Room', 'Bar & Lounge'];
+      const tabsContainer = document.getElementById('gallery-filter-tabs');
+      tabsContainer.innerHTML = categories.map(cat => `
+        <button
+          onclick="filterGallery('${cat}')"
+          class="px-4 py-2 rounded-full text-xs font-semibold transition-all ${
+            cat === activeGalleryCategory
+              ? 'bg-amber-500 text-obsidian-950 shadow-gold-glow'
+              : 'bg-obsidian-900 text-stone-300 hover:text-white border border-white/10'
+          }"
+        >
+          ${cat}
+        </button>
+      `).join('');
+
+      filteredGalleryItems = activeGalleryCategory === 'All'
+        ? [...GALLERY_ITEMS]
+        : GALLERY_ITEMS.filter(g => g.category === activeGalleryCategory);
+
+      const grid = document.getElementById('gallery-grid');
+      grid.innerHTML = filteredGalleryItems.map((item, idx) => `
+        <div
+          onclick="openLightbox(${idx})"
+          class="group relative h-64 sm:h-72 rounded-3xl overflow-hidden border border-white/10 cursor-pointer bg-obsidian-900"
+        >
+          <img
+            src="${item.image}"
+            onerror="this.src='https://placehold.co/800x800/1c1714/d97706?text=${encodeURIComponent(item.title)}'"
+            alt="${item.title}"
+            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-obsidian-950/90 via-obsidian-950/20 to-transparent opacity-80 group-hover:opacity-95 transition-opacity"></div>
+          <div class="absolute bottom-4 left-4 right-4">
+            <span class="text-[10px] font-bold uppercase tracking-widest text-amber-400 block">${item.category}</span>
+            <h4 class="font-serif text-base font-bold text-cream-50 mt-0.5">${item.title}</h4>
+          </div>
+          <div class="absolute top-4 right-4 w-9 h-9 rounded-full bg-obsidian-950/70 border border-white/15 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            <i data-lucide="maximize-2" class="w-4 h-4"></i>
+          </div>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    function filterGallery(category) {
+      activeGalleryCategory = category;
+      initGallery();
+    }
+
+    function openLightbox(index) {
+      currentLightboxIndex = index;
+      updateLightboxUI();
+      document.getElementById('gallery-lightbox').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeLightbox() {
+      document.getElementById('gallery-lightbox').classList.add('hidden');
+    }
+
+    function navigateLightbox(step) {
+      currentLightboxIndex = (currentLightboxIndex + step + filteredGalleryItems.length) % filteredGalleryItems.length;
+      updateLightboxUI();
+    }
+
+    function updateLightboxUI() {
+      const item = filteredGalleryItems[currentLightboxIndex];
+      document.getElementById('lightbox-img').src = item.image;
+      document.getElementById('lightbox-category').textContent = item.category;
+      document.getElementById('lightbox-title').textContent = item.title;
+    }
+
+    // Keyboard Support for Modals & Lightbox
+    document.addEventListener('keydown', (e) => {
+      const lightbox = document.getElementById('gallery-lightbox');
+      if (!lightbox.classList.contains('hidden')) {
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowRight') navigateLightbox(1);
+        if (e.key === 'ArrowLeft') navigateLightbox(-1);
+      } else if (e.key === 'Escape') {
+        closeDishModal();
+        closeTastingDrawer();
+        closeConfirmModal();
+        closeMyBookingsModal();
+      }
+    });
+
+    /**
+     * ===================================================================
+     * TABLE RESERVATION SYSTEM
+     * ===================================================================
+     */
+    function initReservationControls() {
+      // Set default date to tomorrow
+      const dateInput = document.getElementById('res-date');
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const yyyy = tomorrow.getFullYear();
+      const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+      const dd = String(tomorrow.getDate()).padStart(2, '0');
+      const formattedDate = `${yyyy}-${mm}-${dd}`;
+      dateInput.min = formattedDate;
+      dateInput.value = formattedDate;
+
+      renderTimeSlots();
+      renderSeatingOptions();
+      updateBookingSummary();
+    }
+
+    function renderTimeSlots() {
+      const renderGroup = (slots, containerId) => {
+        document.getElementById(containerId).innerHTML = slots.map(slot => {
+          const isSelected = slot === selectedTimeSlot;
+          return `
+            <button
+              type="button"
+              onclick="selectTimeSlot('${slot}')"
+              class="px-4 py-2 rounded-xl text-xs font-bold border transition-all ${
+                isSelected
+                  ? 'bg-amber-500 text-obsidian-950 border-amber-500 shadow-gold-glow'
+                  : 'bg-obsidian-950 text-cream-100 border-white/15 hover:border-amber-400/60'
+              }"
+            >
+              ${slot}
+            </button>
+          `;
+        }).join('');
+      };
+
+      renderGroup(LUNCH_SLOTS, 'lunch-slots-container');
+      renderGroup(DINNER_SLOTS, 'dinner-slots-container');
+    }
+
+    function selectTimeSlot(slot) {
+      selectedTimeSlot = slot;
+      renderTimeSlots();
+      updateBookingSummary();
+    }
+
+    function renderSeatingOptions() {
+      const grid = document.getElementById('seating-options-grid');
+      grid.innerHTML = SEATING_OPTIONS.map(opt => {
+        const isSelected = opt.id === selectedSeating;
+        return `
+          <button
+            type="button"
+            onclick="selectSeating('${opt.id}')"
+            class="p-3.5 rounded-2xl border text-left transition-all ${
+              isSelected
+                ? 'bg-amber-500/15 border-amber-500 text-cream-50'
+                : 'bg-obsidian-950 border-white/10 text-stone-300 hover:border-white/25'
+            }"
+          >
+            <i data-lucide="${opt.icon}" class="w-4 h-4 ${isSelected ? 'text-amber-400' : 'text-stone-400'} mb-2"></i>
+            <span class="block text-xs font-bold leading-tight">${opt.id}</span>
+            <span class="block text-[10px] text-stone-400 mt-1">${opt.desc}</span>
+          </button>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    function selectSeating(seatingId) {
+      selectedSeating = seatingId;
+      renderSeatingOptions();
+      updateBookingSummary();
+    }
+
+    function preselectBooking(seating, occasion) {
+      selectedSeating = seating;
+      document.getElementById('res-occasion').value = occasion;
+      renderSeatingOptions();
+      updateBookingSummary();
+      document.getElementById('reservations').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function updateBookingSummary() {
+      const name = document.getElementById('res-name').value.trim() || 'Valued Guest';
+      const dateVal = document.getElementById('res-date').value;
+      const guests = document.getElementById('res-guests').value;
+      const occasion = document.getElementById('res-occasion').value;
+
+      let displayDate = dateVal;
+      if (dateVal) {
+        const parsed = new Date(dateVal + 'T00:00:00');
+        displayDate = parsed.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+      }
+
+      document.getElementById('summary-name').textContent = name;
+      document.getElementById('summary-date').textContent = displayDate || '—';
+      document.getElementById('summary-time').textContent = selectedTimeSlot;
+      document.getElementById('summary-guests').textContent = guests;
+      document.getElementById('summary-seating').textContent = selectedSeating;
+      document.getElementById('summary-occasion').textContent = occasion;
+    }
+
+    function handleReservationSubmit(e) {
+      e.preventDefault();
+      const refCode = 'SE-' + Math.floor(100000 + Math.random() * 900000);
+      const booking = {
+        ref: refCode,
+        name: document.getElementById('res-name').value.trim(),
+        phone: document.getElementById('res-phone').value.trim(),
+        email: document.getElementById('res-email').value.trim(),
+        date: document.getElementById('summary-date').textContent,
+        time: selectedTimeSlot,
+        guests: document.getElementById('res-guests').value,
+        seating: selectedSeating,
+        occasion: document.getElementById('res-occasion').value,
+        notes: document.getElementById('res-notes').value.trim()
+      };
+
+      savedReservations.unshift(booking);
+      localStorage.setItem('saffron_reservations', JSON.stringify(savedReservations));
+      updateSavedBookingsCount();
+
+      showConfirmationTicket(booking);
+      e.target.reset();
+      initReservationControls();
+    }
+
+    function showConfirmationTicket(booking) {
+      const content = document.getElementById('booking-confirm-content');
+      content.innerHTML = `
+        <div class="bg-gradient-to-r from-amber-500 to-ember-600 p-6 text-obsidian-950 text-center">
+          <div class="w-12 h-12 rounded-full bg-obsidian-950/15 flex items-center justify-center mx-auto mb-2">
+            <i data-lucide="check" class="w-7 h-7"></i>
+          </div>
+          <span class="text-[11px] font-bold uppercase tracking-widest">Table Confirmed</span>
+          <h3 class="font-serif text-2xl font-bold mt-0.5">We Await Your Arrival</h3>
+        </div>
+
+        <div class="p-6 space-y-4 text-sm">
+          <div class="p-3.5 rounded-2xl bg-obsidian-950 border border-amber-500/30 text-center">
+            <span class="text-[10px] uppercase tracking-widest text-stone-400 block">Reservation Reference</span>
+            <span class="font-mono text-lg font-bold text-amber-400 tracking-wider">#${booking.ref}</span>
+          </div>
+
+          <div class="space-y-2.5 text-xs">
+            <div class="flex justify-between py-1.5 border-b border-white/10">
+              <span class="text-stone-400">Guest Name</span>
+              <span class="font-bold text-cream-50">${booking.name}</span>
+            </div>
+            <div class="flex justify-between py-1.5 border-b border-white/10">
+              <span class="text-stone-400">Date &amp; Time</span>
+              <span class="font-bold text-cream-50">${booking.date} at ${booking.time}</span>
+            </div>
+            <div class="flex justify-between py-1.5 border-b border-white/10">
+              <span class="text-stone-400">Party &amp; Seating</span>
+              <span class="font-bold text-cream-50">${booking.guests} • ${booking.seating}</span>
+            </div>
+            <div class="flex justify-between py-1.5">
+              <span class="text-stone-400">Occasion</span>
+              <span class="font-bold text-amber-400">${booking.occasion}</span>
+            </div>
+          </div>
+
+          <button
+            onclick="closeConfirmModal()"
+            class="w-full py-3 rounded-full bg-white/10 hover:bg-white/15 text-cream-50 font-bold text-xs transition-colors"
+          >
+            Done
+          </button>
+        </div>
+      `;
+
+      document.getElementById('booking-confirm-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeConfirmModal() {
+      document.getElementById('booking-confirm-modal').classList.add('hidden');
+    }
+
+    function updateSavedBookingsCount() {
+      document.getElementById('saved-res-count-label').textContent = `${savedReservations.length} active pass${savedReservations.length === 1 ? '' : 'es'} stored`;
+    }
+
+    function openMyBookingsModal() {
+      const list = document.getElementById('my-bookings-list');
+      if (savedReservations.length === 0) {
+        list.innerHTML = `
+          <div class="text-center py-10">
+            <i data-lucide="calendar" class="w-10 h-10 text-stone-600 mx-auto mb-2"></i>
+            <p class="font-serif text-lg font-bold text-cream-50">No Saved Reservations Yet</p>
+            <p class="text-xs text-stone-400 mt-1">Your confirmed table passes will appear here automatically.</p>
+          </div>
+        `;
+      } else {
+        list.innerHTML = savedReservations.map((b, index) => `
+          <div class="p-4 rounded-2xl bg-obsidian-950 border border-white/10 flex items-start justify-between gap-3">
+            <div>
+              <span class="text-[11px] font-mono font-bold text-amber-400">#${b.ref}</span>
+              <h4 class="font-serif font-bold text-base text-cream-50">${b.date} • ${b.time}</h4>
+              <p class="text-xs text-stone-400 mt-0.5">${b.guests} • ${b.seating} (${b.occasion})</p>
+            </div>
+            <button onclick="cancelReservation(${index})" class="px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 text-xs font-semibold">
+              Cancel
+            </button>
+          </div>
+        `).join('');
+      }
+
+      document.getElementById('my-bookings-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeMyBookingsModal() {
+      document.getElementById('my-bookings-modal').classList.add('hidden');
+    }
+
+    function cancelReservation(index) {
+      savedReservations.splice(index, 1);
+      localStorage.setItem('saffron_reservations', JSON.stringify(savedReservations));
+      updateSavedBookingsCount();
+      openMyBookingsModal();
+      showToast('Reservation cancelled');
+    }
+
+    /**
+     * Newsletter & Toast Notification
+     */
+    function handleNewsletterSubmit(e) {
+      e.preventDefault();
+      e.target.reset();
+      showToast('Welcome to the Chef’s Seasonal Dispatch!');
+    }
+
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-obsidian-800 border border-amber-500/40 text-cream-50 shadow-2xl text-xs font-semibold animate-fade-up';
+      toast.innerHTML = `
+        <i data-lucide="sparkles" class="w-4 h-4 text-amber-400 shrink-0"></i>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+      lucide.createIcons();
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(8px)';
+        toast.style.transition = 'all 0.25s ease';
+        setTimeout(() => toast.remove(), 250);
+      }, 3200);
+    }
+  </script>
+</body>
+</html>
